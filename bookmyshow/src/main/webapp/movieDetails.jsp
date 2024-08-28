@@ -39,9 +39,50 @@
                     String description = rs.getString("description");
         %>
 
+         <nav class="bg-blue-600 p-4 sticky top-0 z-10 ">
+                <div class="container mx-auto flex justify-between items-center">
+                    <a href="index.jsp" class="text-white text-2xl font-bold">bookmyshow</a>
+                    <div>
+                        <a href="profile.jsp" class="text-white hover:text-gray-200 mx-2">profile</a>
+                        <a href="about.jsp" class="text-white hover:text-gray-200 mx-2">About</a>
+                        <a href="services.jsp" class="text-white hover:text-gray-200 mx-2">Services</a>
+                        <%
+                            // Check if the user is logged in and has the 'admin' role
+                            if (session != null && session.getAttribute("role") != null) {
+                                String role = (String) session.getAttribute("role");
+                                if ("admin".equals(role)) {
+                        %>
+                        <!-- Admin-specific links -->
+                        <a href="admin_dashboard.jsp" class="text-white hover:text-gray-200 mx-2">Admin Dashboard</a>
+                        <a href="add_movies.jsp" class="text-white hover:text-gray-200 mx-2">Add Movies</a>
+                        <a href="addCast.jsp" class="text-white hover:text-gray-200 mx-2">Add Cast</a>
+                        <a href="manage_bookings.jsp" class="text-white hover:text-gray-200 mx-2">Manage Bookings</a>
+                        <a href="analytics.jsp" class="text-white hover:text-gray-200 mx-2">Analytics</a>
+                        <%
+                                }
+                            }
+                        %>
+                        <!-- Logout Form or Login Link -->
+                        <%
+                            if (session != null && session.getAttribute("username") != null) {
+                        %>
+                        <form action="logout" method="post" style="display:inline;">
+                            <button type="submit" class="bg-red-500 text-white hover:bg-red-700 px-4 py-2 rounded">Logout</button>
+                        </form>
+                        <%
+                            } else {
+                        %>
+                        <a href="log-in" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Login</a>
+                        <%
+                            }
+                        %>
+                    </div>
+                </div>
+            </nav>
+
         <!-- Movie Detail Card -->
         <div class="bg-gray-800 shadow-lg overflow-hidden pl-40 pr-40 p-6 pb-14"
-             style="background-image: linear-gradient(90deg, rgb(26, 26, 26) 24.97%, rgb(26, 26, 26) 38.3%, rgba(26, 26, 26, 0.04) 77.47%, rgb(26, 26, 26) 100%), url('<%= image_url %>'); background-size: cover; background-position: center;">
+             style="background-image: linear-gradient(90deg, rgb(26, 26, 26) 24.97%, rgb(26, 26, 26) 38.3%, rgba(26, 26, 26, 0.04) 77.47%, rgb(26, 26, 26) 100%), url('<%= image_url %>');  background-position: center;   background-size: cover; background-repeat: no-repeat;">
             <div class="flex flex-col md:flex-row">
                 <!-- Movie Poster -->
                 <div class="w-60 relative">
@@ -58,6 +99,8 @@
                         </div>
                         <div class="flex items-center space-x-3 mb-4">
                             <span class="bg-white text-black px-2 py-1 rounded">2D</span>
+                            <span class="bg-white text-black px-2 py-1 rounded">3D</span>
+                             <span class="bg-white text-black px-2 py-1 rounded">IMAX</span>
                             <span class="bg-white text-black px-2 py-1 rounded"><%= language %></span>
                         </div>
                         <p class="text-white text-m font-semibold mb-4"><%= duration %> mins | <%= genre %> | UA | <%= releaseDate %></p>
@@ -70,11 +113,17 @@
             </div>
         </div>
 
+        <div class = " text-black mt-10 border-gray-400  border-b mr-32 ml-32 p-4">
+          <h2 class="text-2xl md:text-3xl text-black font-bold mb-4">About The Movie </h2>
+          <p class=" mb-4"><%= description  %></p>
+
+        </div>
+
         <!-- Cast Section -->
-        <h2 class="text-2xl md:text-3xl font-bold mb-6">Cast</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+        <div class= "mr-32 ml-32 p-4 mt-3  border-gray-400  border-b ">
+        <h2 class="text-2xl md:text-3xl text-black font-bold   ">Cast</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-6 md:grid-cols-7 ">
             <%
-                // Retrieve cast details
                 String sqlCast = "SELECT * FROM movie_cast WHERE movie_id = ?";
                 pstmt = conn.prepareStatement(sqlCast);
                 pstmt.setInt(1, movie_id);
@@ -85,14 +134,12 @@
                     String role = rsCast.getString("role");
                     String profileImageUrl = rsCast.getString("profile_image_url");
             %>
-
             <!-- Cast Card -->
-            <div class="bg-gray-800 rounded-lg shadow-md p-4 text-center hover:shadow-lg transition-all">
-                <img src="<%= profileImageUrl %>" alt="<%= name %>" class="w-24 h-24 mx-auto rounded-full mb-4 object-cover border-4 border-gray-700">
-                <h3 class="text-lg font-semibold text-white"><%= name %></h3>
-                <p class="text-sm text-gray-400"><%= role %></p>
+            <div class=" rounded-lg text-center hover:shadow-lg transition-all pt-4 ">
+                <img src="<%= profileImageUrl %>" alt="<%= name %>" class="w-28 h-28 mx-auto rounded-full mb-4 object-cover ">
+                <h3 class="text-m text-black"><%= name %></h3>
+                <p class="text-sm text-gray-500"><%= role %></p>
             </div>
-
             <%
                 }
             %>

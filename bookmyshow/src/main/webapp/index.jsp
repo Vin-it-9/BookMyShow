@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Ticket Booking</title>
+    <title>bookmyshow</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
       <style>
             .movie-card {
@@ -22,49 +22,94 @@
                 color: white;
             }
         </style>
+          <script>
+                function searchMovies() {
+                    var searchTerm = document.getElementById('searchBar').value;
+                    var suggestions = document.getElementById('suggestions');
+
+                    if (searchTerm.length < 2) {
+                        suggestions.style.display = 'none';
+                        return;
+                    }
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', 'search?term=' + encodeURIComponent(searchTerm), true);
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            var results = JSON.parse(xhr.responseText);
+                            suggestions.innerHTML = '';
+                            if (results.length > 0) {
+                                results.forEach(function(movie) {
+                                    var li = document.createElement('li');
+                                    li.textContent = movie.title;
+                                      li.classList.add('py-2', 'px-4', 'border-b', 'border-gray-300', 'hover:bg-gray-200', 'cursor-pointer');
+                                    li.onclick = function() {
+                                        window.location.href = 'movieDetails.jsp?movie_id=' + movie.movie_id;
+                                    };
+                                    suggestions.appendChild(li);
+                                });
+                                suggestions.style.display = 'block';
+                            } else {
+                                suggestions.style.display = 'none';
+                            }
+                        }
+                    };
+                    xhr.send();
+                }
+
+                function showAllMovies() {
+                    var searchTerm = document.getElementById('searchBar').value;
+                    if (searchTerm.length >= 2) {
+                        window.location.href = 'searchResults.jsp?term=' + encodeURIComponent(searchTerm);
+                    }
+                }
+            </script>
 </head>
 <body class="bg-gray-100">
-    <!-- Navbar -->
-    <nav class="bg-blue-600 p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.jsp" class="text-white text-2xl font-bold">Ticket Booking</a>
-            <div>
-                <a href="profile.jsp" class="text-white hover:text-gray-200 mx-2">profile</a>
-                <a href="about.jsp" class="text-white hover:text-gray-200 mx-2">About</a>
-                <a href="services.jsp" class="text-white hover:text-gray-200 mx-2">Services</a>
-                <%
-                    // Check if the user is logged in and has the 'admin' role
-                    if (session != null && session.getAttribute("role") != null) {
-                        String role = (String) session.getAttribute("role");
-                        if ("admin".equals(role)) {
-                %>
-                <!-- Admin-specific links -->
-                <a href="admin_dashboard.jsp" class="text-white hover:text-gray-200 mx-2">Admin Dashboard</a>
-                <a href="add_movies.jsp" class="text-white hover:text-gray-200 mx-2">Add Movies</a>
-                <a href="addCast.jsp" class="text-white hover:text-gray-200 mx-2">Add Cast</a>
-                <a href="manage_bookings.jsp" class="text-white hover:text-gray-200 mx-2">Manage Bookings</a>
-                <a href="analytics.jsp" class="text-white hover:text-gray-200 mx-2">Analytics</a>
-                <%
+     <nav class="bg-blue-600 p-4 sticky top-0 z-10">
+            <div class="container mx-auto flex justify-between items-center">
+                <a href="index.jsp" class="text-white text-2xl font-bold">bookmyshow</a>
+                <div class="relative flex items-center">
+                    <input type="text" id="searchBar" class="border p-1 w-full rounded" placeholder="Search movies..." onkeyup="searchMovies()">
+                   <ul id="suggestions" class="hidden cursor-pointer bg-white mt-2 pl-2 p-2 absolute top-full left-0 right-0 rounded-lg shadow-lg  transition-all"></ul>
+                <button onclick="showAllMovies()" class="bg-gray-900 text-white px-3 py-1 ml-2 rounded">Search</button>
+                </div>
+                <div>
+                    <a href="profile.jsp" class="text-white hover:text-gray-200 mx-2">profile</a>
+                    <a href="about.jsp" class="text-white hover:text-gray-200 mx-2">About</a>
+                    <a href="services.jsp" class="text-white hover:text-gray-200 mx-2">Services</a>
+                    <%
+                        if (session != null && session.getAttribute("role") != null) {
+                            String role = (String) session.getAttribute("role");
+                            if ("admin".equals(role)) {
+                    %>
+                    <!-- Admin-specific links -->
+                    <a href="admin_dashboard.jsp" class="text-white hover:text-gray-200 mx-2">Admin Dashboard</a>
+                    <a href="add_movies.jsp" class="text-white hover:text-gray-200 mx-2">Add Movies</a>
+                    <a href="addCast.jsp" class="text-white hover:text-gray-200 mx-2">Add Cast</a>
+                    <a href="manage_bookings.jsp" class="text-white hover:text-gray-200 mx-2">Manage Bookings</a>
+                    <a href="analytics.jsp" class="text-white hover:text-gray-200 mx-2">Analytics</a>
+                    <%
+                            }
                         }
-                    }
-                %>
-                <!-- Logout Form or Login Link -->
-                <%
-                    if (session != null && session.getAttribute("username") != null) {
-                %>
-                <form action="logout" method="post" style="display:inline;">
-                    <button type="submit" class="bg-red-500 text-white hover:bg-red-700 px-4 py-2 rounded">Logout</button>
-                </form>
-                <%
-                    } else {
-                %>
-                <a href="log-in" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Login</a>
-                <%
-                    }
-                %>
+                    %>
+                    <!-- Logout Form or Login Link -->
+                    <%
+                        if (session != null && session.getAttribute("username") != null) {
+                    %>
+                    <form action="logout" method="post" style="display:inline;">
+                        <button type="submit" class="bg-red-500 text-white hover:bg-red-700 px-4 py-2 rounded">Logout</button>
+                    </form>
+                    <%
+                        } else {
+                    %>
+                    <a href="log-in" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Login</a>
+                    <%
+                        }
+                    %>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-6 pl-32 pr-32">
@@ -93,13 +138,12 @@
             <div class="mt-6 bg-white shadow-md rounded p-6">
                 <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
                 <div class="mt-4">
-                    <p class="text-gray-600">Manage movies, cast, and other admin-related tasks from here.</p>
                     <div class="mt-4">
-
                         <a href="All-Users" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Users</a>
                         <a href="Add-Movie" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Add Movies</a>
                         <a href="Add-Cast" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Add Cast</a>
-
+                        <a href="Delete-movie" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Delete Movie</a>
+                        <a href="enterMovieId.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Edit Movie</a>
 
                     </div>
                 </div>
@@ -160,5 +204,8 @@
             </div>
         </div>
     </div>
+
+
+
 </body>
 </html>

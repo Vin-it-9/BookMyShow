@@ -38,7 +38,10 @@ public class URLRewriteFilter implements Filter {
             dispatcher.forward(request, response);
         } else if (uri.endsWith("All-Users")) {
             RequestDispatcher dispatcher = httpRequest.getRequestDispatcher("/alluser.jsp");
-            dispatcher.forward(request, response);
+            dispatcher.forward(request, response); }
+        else if (uri.endsWith("Delete-movie")) {
+                RequestDispatcher dispatcher = httpRequest.getRequestDispatcher("/deletemovie.jsp");
+                dispatcher.forward(request, response);
         } else {
             // Continue with the filter chain if no match
             chain.doFilter(request, response);
