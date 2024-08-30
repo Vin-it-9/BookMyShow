@@ -5,8 +5,14 @@
     <meta charset="UTF-8">
     <title>Movie Details</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+     <script src = "script.js" > </script>
 </head>
-<body class="text-gray-100">
+ <style>
+  .search{
+            width: 500px;
+            }
+        </style>
+<body class="bg-gray-100">
 
     <div class="container mx-auto">
         <%
@@ -39,46 +45,50 @@
                     String description = rs.getString("description");
         %>
 
-         <nav class="bg-blue-600 p-4 sticky top-0 z-10 ">
-                <div class="container mx-auto flex justify-between items-center">
-                    <a href="index.jsp" class="text-white text-2xl font-bold">bookmyshow</a>
-                    <div>
-                        <a href="profile.jsp" class="text-white hover:text-gray-200 mx-2">profile</a>
-                        <a href="about.jsp" class="text-white hover:text-gray-200 mx-2">About</a>
-                        <a href="services.jsp" class="text-white hover:text-gray-200 mx-2">Services</a>
-                        <%
-                            // Check if the user is logged in and has the 'admin' role
-                            if (session != null && session.getAttribute("role") != null) {
-                                String role = (String) session.getAttribute("role");
-                                if ("admin".equals(role)) {
-                        %>
-                        <!-- Admin-specific links -->
-                        <a href="admin_dashboard.jsp" class="text-white hover:text-gray-200 mx-2">Admin Dashboard</a>
-                        <a href="add_movies.jsp" class="text-white hover:text-gray-200 mx-2">Add Movies</a>
-                        <a href="addCast.jsp" class="text-white hover:text-gray-200 mx-2">Add Cast</a>
-                        <a href="manage_bookings.jsp" class="text-white hover:text-gray-200 mx-2">Manage Bookings</a>
-                        <a href="analytics.jsp" class="text-white hover:text-gray-200 mx-2">Analytics</a>
-                        <%
+          <nav class="bg-white  p-3 sticky top-0 z-10 pl-32 pr-32">
+                    <div class="container mx-auto flex justify-between items-center">
+
+                        <a href="index.jsp" class=" text-2xl ">
+                          <img src="images/bookmyshow.png" alt="Logo" class="inline-block h-10 w-auto">
+                        </a>
+
+                        <div class="relative flex items-center search">
+                            <input type="text" id="searchBar" class="border border-gray-400 p-1  w-full rounded" placeholder="Search movies..." onkeyup="searchMovies()">
+                           <ul id="suggestions" class="hidden cursor-pointer bg-white mt-2 pl-2 p-2 absolute top-full left-0 right-0 rounded-lg shadow-lg  transition-all"></ul>
+                        <button onclick="showAllMovies()" class="bg-gray-900 text-white px-3 py-1 ml-2 rounded">Search</button>
+                        </div>
+                        <div>
+                            <a href="profile.jsp" class=" hover:text-gray-600 mx-2">Profile</a>
+                            <a href="profile.jsp" class=" hover:text-gray-600 mx-2">About</a>
+                             <a href="profile.jsp" class=" hover:text-gray-600 mx-2">Contact</a>
+                            <%
+                                if (session != null && session.getAttribute("role") != null) {
+                                    String role = (String) session.getAttribute("role");
+                                    if ("admin".equals(role)) {
+                            %>
+                            <a href="manage_bookings.jsp" class=" hover:text-gray-600 mx-2">Manage Bookings</a>
+                            <a href="analytics.jsp" class=" hover:text-gray-600 mx-2">Analytics</a>
+                            <%
+                                    }
                                 }
-                            }
-                        %>
-                        <!-- Logout Form or Login Link -->
-                        <%
-                            if (session != null && session.getAttribute("username") != null) {
-                        %>
-                        <form action="logout" method="post" style="display:inline;">
-                            <button type="submit" class="bg-red-500 text-white hover:bg-red-700 px-4 py-2 rounded">Logout</button>
-                        </form>
-                        <%
-                            } else {
-                        %>
-                        <a href="log-in" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Login</a>
-                        <%
-                            }
-                        %>
+                            %>
+                            <!-- Logout Form or Login Link -->
+                            <%
+                                if (session != null && session.getAttribute("username") != null) {
+                            %>
+                            <form action="logout" method="post" style="display:inline;">
+                                <button type="submit" class="bg-red-500 text-white hover:bg-red-700 px-3 py-1 rounded">Logout</button>
+                            </form>
+                            <%
+                                } else {
+                            %>
+                            <a href="log-in" class="bg-blue-500 text-white hover:bg-blue-700 px-3 py-1 rounded">Login</a>
+                            <%
+                                }
+                            %>
+                        </div>
                     </div>
-                </div>
-            </nav>
+                </nav>
 
         <!-- Movie Detail Card -->
         <div class="bg-gray-800 shadow-lg overflow-hidden pl-40 pr-40 p-6 pb-14"
@@ -92,7 +102,7 @@
                 <!-- Movie Details -->
                 <div class="p-6 flex flex-col justify-between md:w-2/3">
                     <div>
-                        <h1 class="text-4xl font-bold mb-4"><%= title %></h1>
+                        <h1 class="text-4xl font-bold mb-4 text-gray-100"><%= title %></h1>
                         <div class="flex items-center text-gray-400 mb-4">
                             <span class="text-white font-bold text-lg"><%= rating %>/10</span>
                             <span class="ml-2 text-sm">(243.4K Votes)</span>

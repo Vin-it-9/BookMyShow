@@ -42,7 +42,12 @@ public class URLRewriteFilter implements Filter {
         else if (uri.endsWith("Delete-movie")) {
                 RequestDispatcher dispatcher = httpRequest.getRequestDispatcher("/deletemovie.jsp");
                 dispatcher.forward(request, response);
-        } else {
+        }
+        else if (uri.endsWith("All-Movies")) {
+            RequestDispatcher dispatcher = httpRequest.getRequestDispatcher("/allmovie.jsp");
+            dispatcher.forward(request, response);
+        }
+        else {
             // Continue with the filter chain if no match
             chain.doFilter(request, response);
         }
