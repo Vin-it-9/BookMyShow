@@ -12,13 +12,10 @@ public class LogoutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Get the current session, if it exists
         HttpSession session = request.getSession(false);
         if (session != null) {
-            // Invalidate the session to log out the user
             session.invalidate();
         }
-        // Redirect to the login page or home page after logout
         response.sendRedirect(request.getContextPath() + "/");
     }
 }

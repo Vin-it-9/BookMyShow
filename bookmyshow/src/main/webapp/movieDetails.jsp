@@ -90,6 +90,10 @@
                     </div>
                 </nav>
 
+                <%
+                    String movieId = request.getParameter("movie_id");
+                %>
+
         <!-- Movie Detail Card -->
         <div class="bg-gray-800 shadow-lg overflow-hidden pl-40 pr-40 p-6 pb-14"
              style="background-image: linear-gradient(90deg, rgb(26, 26, 26) 24.97%, rgb(26, 26, 26) 38.3%, rgba(26, 26, 26, 0.04) 77.47%, rgb(26, 26, 26) 100%), url('<%= image_url %>');  background-position: center;   background-size: cover; background-repeat: no-repeat;">
@@ -114,11 +118,11 @@
                             <span class="bg-white text-black px-2 py-1 rounded"><%= language %></span>
                         </div>
                         <p class="text-white text-m font-semibold mb-4"><%= duration %> mins | <%= genre %> | UA | <%= releaseDate %></p>
-                        <a href="<%= trailerUrl %>" class="inline-block px-5 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-900 transition-all">Watch Trailer</a>
+                        <a href="trailers.jsp?movie_id=<%= movie_id %>" class="inline-block px-5 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-900 transition-all">Watch Trailer</a>
                     </div>
                     <div>
-                        <button class="inline-block px-7 py-2 bg-red-600 text-white rounded-md hover:bg-red-500 transition-all">Book tickets</button>
-                    </div>
+                           <a href="Booking.jsp?movie_id=<%= movieId %>" class="inline-block px-7 py-2 bg-red-600 text-white rounded-md hover:bg-red-500 transition-all">Book Tickets</a>
+                       </div>
                 </div>
             </div>
         </div>

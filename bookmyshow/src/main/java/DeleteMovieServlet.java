@@ -48,14 +48,20 @@ public class DeleteMovieServlet extends HttpServlet {
                 statement.setInt(1, movieId);
                 statement.executeUpdate();
 
+                sql = "DELETE FROM trailers WHERE movie_id = ?";
+                statement = connection.prepareStatement(sql);
+                statement.setInt(1, movieId);
+                statement.executeUpdate();
+
                 sql = "DELETE FROM movies WHERE movie_id = ?";
                 statement = connection.prepareStatement(sql);
                 statement.setInt(1, movieId);
+
                 int rowsAffected = statement.executeUpdate();
 
                 if (rowsAffected > 0) {
                     connection.commit();
-                    response.sendRedirect(request.getContextPath() + "/?message=Movie and related cast deleted successfully.");
+                    response.sendRedirect(request.getContextPath() + "/?message=Movie deleted successfully.");
                 } else {
                     connection.rollback();
                     request.setAttribute("errorMessage", "Failed to delete movie. Movie ID may not exist.");
