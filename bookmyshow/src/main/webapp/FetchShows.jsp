@@ -26,13 +26,12 @@
         SimpleDateFormat time24HourFormat = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat time12HourFormat = new SimpleDateFormat("hh:mm a");
 %>
-
-<div class="overflow-x-auto">
-    <table class="min-w-full bg-white shadow-md rounded-lg">
+<div class="overflow-x-auto  ">
+    <table class="min-w-full  bg-white shadow-lg rounded-lg ">
         <thead>
-            <tr class="bg-blue-600 text-white">
-                <th class="py-3 px-6 text-left">Theater Name</th>
-                <th class="py-3 px-6 text-left">Show Times</th>
+            <tr class="bg-gradient-to-r from-blue-800 to-blue-600 text-white">
+                <th class="py-4 px-6 text-center text-lg font-semibold w-1/4 ">Theater Name</th>
+                <th class="py-4 px-6 text-left text-lg font-semibold">Show Times</th>
             </tr>
         </thead>
         <tbody>
@@ -48,21 +47,23 @@
                     if (!theaterName.equals(currentTheater)) {
                         if (showCount > 0) {
             %>
+                        <!-- Close previous theater showtimes div -->
                         </div></td></tr>
             <%
                         }
                         currentTheater = theaterName;
                         showCount = 0;
             %>
-            <tr class="bg-gray-100 hover:bg-gray-200 transition duration-300">
-                <td class="py-3 px-6 font-bold text-blue-900"><%= theaterName %></td>
-                <td class="py-3 px-6">
+            <tr class="bg-gray-50 hover:bg-gray-100 transition duration-300 ease-in-out border-b border-gray-200">
+                <!-- Fixed-width column for theater name to ensure alignment -->
+                <td class="py-4 px-6 font-bold text-gray-800 w-1/4 align-top"><%= theaterName %></td>
+                <td class="py-4 px-6">
                     <div class="flex flex-wrap gap-3">
             <%
                     }
-                    if (showCount > 0 && showCount % 5 == 0) {
+                    if (showCount > 0 && showCount % 7 == 0) {
             %>
-                    </div><div class="flex flex-wrap gap-3">
+                    </div><div class="flex flex-wrap gap-3 mt-4">
             <%
                     }
             %>
@@ -70,7 +71,7 @@
                         <input type="hidden" name="show_id" value="<%= showId %>">
                         <input type="hidden" name="movie_id" value="<%= movieId %>">
                         <input type="hidden" name="theater_name" value="<%= theaterName %>">
-                        <button type="submit" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300">
+                        <button type="submit" class=" text-green-500 border border-gray-400 font-semibold py-2 px-4 rounded-sm hover:bg-green-600 transition duration-200 ease-in-out ">
                             <%= showTime12 %>
                         </button>
                     </form>
@@ -87,7 +88,6 @@
         </tbody>
     </table>
 </div>
-
 <%
     } catch (ClassNotFoundException | SQLException e) {
         e.printStackTrace();

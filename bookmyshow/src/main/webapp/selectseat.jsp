@@ -36,35 +36,26 @@
             theaterName = rsShow.getString("theater_name");
             showTime = rsShow.getString("show_time");
             seatPrice = rsShow.getDouble("ticket_price");
-
-            // Convert time from 24-hour to 12-hour format
             java.util.Date date = time24HourFormat.parse(showTime);
             showTime = time12HourFormat.format(date);
         } else {
             out.println("No show information found for the given ID.");
             return;
         }
-
-        // Query to get seats based on show_id, including seat_no in the result
         String seatsQuery = "SELECT `row`, seat_number, seat_no, is_available " +
                             "FROM seats " +
                             "WHERE show_id = ?";
         seatsStmt = conn.prepareStatement(seatsQuery);
-        seatsStmt.setInt(1, Integer.parseInt(showId));  // Filter by show_id
+        seatsStmt.setInt(1, Integer.parseInt(showId));
         rsSeats = seatsStmt.executeQuery();
-
-        // Create a map to store seat availability and seat_no
         Map<String, Map<Integer, Boolean>> seatMap = new HashMap<>();
-        Map<String, String> seatNoMap = new HashMap<>();  // Store seat_no for reference
+        Map<String, String> seatNoMap = new HashMap<>();
         while (rsSeats.next()) {
             String seatRow = rsSeats.getString("row");
             int seatNumber = rsSeats.getInt("seat_number");
             String seatNo = rsSeats.getString("seat_no");
             boolean isAvailable = rsSeats.getBoolean("is_available");
-
-            // Store seat_no mapped to row and seatNumber
             seatNoMap.put(seatRow + "_" + seatNumber, seatNo);
-
             Map<Integer, Boolean> seats = seatMap.get(seatRow);
             if (seats == null) {
                 seats = new HashMap<>();
@@ -97,19 +88,19 @@
             transition: background-color 0.3s, border-color 0.3s;
         }
         .available-seat {
-            background-color: #4CAF50; /* Green */
             border-color: #388E3C;
-            color: #fff;
+            color: #388E3C;
         }
         .unavailable-seat {
-            background-color: #F44336; /* Red */
-            border-color: #C62828;
+            background-color: #d9dbde;
+            border:none;
             color: #fff;
-            cursor: not-allowed;
+          cursor:default;
         }
         .selected-seat {
-            background-color: #2196F3; /* Blue */
-            border-color: #1976D2;
+            background-color: #388E3C;
+            color:white ;
+             border-color: #388E3C;
         }
     </style>
     <script>
@@ -125,69 +116,93 @@
             $('.seat-button').click(function() {
                 if ($(this).hasClass('available-seat') && !$(this).hasClass('disabled')) {
                     $(this).toggleClass('selected-seat');
-                    updateTotalAmount(); // Update total amount after each click
+                    updateTotalAmount();
                 }
             });
 
             $('form').on('submit', function(event) {
                 if ($('.selected-seat').length === 0) {
                     alert('Please select at least one seat.');
-                    event.preventDefault(); // Prevent form submission
+                    event.preventDefault();
                 }
             });
         });
     </script>
 </head>
-<body class="bg-gray-100 min-h-screen">
-
-    <div class="container mx-auto p-6 md:p-12">
-        <h1 class="text-3xl md:text-4xl font-bold text-blue-700 mb-6">Select Seats for <%= movieTitle %></h1>
-
-        <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-2">Theater: <%= theaterName %></h2>
-            <h3 class="text-xl font-medium text-gray-700 mb-4">Show Time: <%= showTime %></h3>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <div class="bg-white text-gray-700  py-4 px-6 border-b w-full ">
+        <div class="container mx-auto flex justify-between items-center">
+         <div class="text-lg">
+            <h1 class="text-m font-semibold"><%= movieTitle %></h1>
+                <p class="text-xs" ><span ></span> <%= theaterName %> | <span>Show Time:</span> <%= showTime %></p>
+            </div>
         </div>
+    </div>
 
-        <h3 class="text-xl font-semibold text-gray-800 mb-4">Select Your Seats:</h3>
-        <form action="ConfirmBooking.jsp" method="POST">
-            <input type="hidden" name="show_id" value="<%= showId %>">
-            <input type="hidden" name="movie_id" value="<%= movieId %>">
-            <input type="hidden" name="movie_title" value="<%= movieTitle %>">
-            <input type="hidden" id="selectedSeats" name="selected_seats">
-            <input type="hidden" id="seatPrice" value="<%= seatPrice %>">
+       <!-- below is this for seats sections  -->
+<div class = "flex items-center justify-center w-full ">
+    <div class="flex  items-center justify-center  mb-10">
+        <div class="container w-full bg-white shadow-lg rounded-lg p-8 mt-4">
+        <div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Select Your Seats:</h3>
+            <form action="ConfirmBooking.jsp" method="POST">
 
-            <div class="space-y-6">
-                <% for (Map.Entry<String, Map<Integer, Boolean>> rowEntry : seatMap.entrySet()) {
-                    String row = rowEntry.getKey();
-                    Map<Integer, Boolean> seats = rowEntry.getValue();
-                %>
-                <div class="flex items-center mb-4">
-                    <span class="mr-6 text-lg font-medium text-gray-700"><%= row %></span>
-                    <div class="grid grid-cols-12 gap-2">
-                        <% for (int i = 1; i <= seats.size(); i++) {
-                            boolean isAvailable = seats.getOrDefault(i, false);
-                            String seatId = row + "_" + i;
-                            String seatNo = seatNoMap.get(seatId);  // Get the seat_no directly
-                        %>
-                        <button type="button" class="seat-button
-                                <% if (isAvailable) { %> available-seat <% } else { %> unavailable-seat disabled <% } %>"data-seat-id="<%= seatNo %>"  <!-- Use seat_no here -->
-                                <% if (!isAvailable) { %>  <% } %>
-                            <%= i %>
-                        </button>
+                <input type="hidden" name="show_id" value="<%= showId %>">
+                <input type="hidden" name="movie_id" value="<%= movieId %>">
+                <input type="hidden" name="movie_title" value="<%= movieTitle %>">
+                <input type="hidden" id="selectedSeats" name="selected_seats">
+                <input type="hidden" id="seatPrice" value="<%= seatPrice %>">
 
-                        <% } %>
+                <div class="space-y-3">
+                    <% for (Map.Entry<String, Map<Integer, Boolean>> rowEntry : seatMap.entrySet()) {
+                        String row = rowEntry.getKey();
+                        Map<Integer, Boolean> seats = rowEntry.getValue();
+                    %>
+                    <div class="flex items-center mb-4">
+                        <span class="mr-6 text-lg font-medium text-gray-700"><%= row %></span>
+                        <div class="grid grid-cols-12 gap-2">
+                            <% for (int i = 1; i <= seats.size(); i++) {
+                                boolean isAvailable = seats.getOrDefault(i, false);
+                                String seatId = row + "_" + i;
+                                String seatNo = seatNoMap.get(seatId);
+                            %>
+                            <button type="button" class="seat-button
+                                    <% if (isAvailable) { %> available-seat <% } else { %> unavailable-seat disabled <% } %>" data-seat-id="<%= seatNo %>">
+                                <%= i %>
+                            </button>
+                            <% } %>
+                        </div>
+                    </div>
+                    <% } %>
                     </div>
                 </div>
-                <% } %>
-            </div>
 
-            <div class="text-xl font-semibold text-gray-800 mb-4" id="totalAmount">Pay: 0.00 Rs</div>
+        <div class="flex justify-center mt-6 ">
+            <svg width="260" height="100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 100">
+              <!-- Screen Base -->
+              <rect x="10" y="20" width="240" height="60" fill="rgba(255, 255, 255, 0.8)" stroke="black" stroke-width="2" />
+              <!-- Stand -->
+              <rect x="115" y="80" width="30" height="10" fill="black" />
+              <!-- Base -->
+              <rect x="90" y="90" width="80" height="5" fill="black" />
+            </svg>
+        </div>
 
-            <button type="submit" class="bg-green-600 mt-5 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-700 transition duration-300">
-                Confirm Booking
-            </button>
-        </form>
-    </div>
+         <div class="flex justify-center  ">
+                   <p>All eyes this way please!</P>
+          </div>
+
+
+
+
+
+                <div class="text-xl font-semibold text-gray-800 mb-2 mt-4" id="totalAmount">Pay: 0.00 Rs</div>
+                <button type="submit" class="bg-green-600 mt-5 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-700 transition duration-300">
+                    Confirm Booking
+                </button>
+            </form>
+        </div>
+    </div> </div>
 
     <script>
         document.querySelector('form').addEventListener('submit', function() {
@@ -198,7 +213,6 @@
             document.getElementById('selectedSeats').value = selectedSeats.join(',');
         });
     </script>
-
 </body>
 </html>
 
