@@ -43,8 +43,8 @@
                 </div>
                 <div>
                     <a href="profile.jsp" class=" hover:text-gray-600 mx-2">Profile</a>
-                      <a href="profile.jsp" class=" hover:text-gray-600 mx-2">About</a>
-                        <a href="profile.jsp" class=" hover:text-gray-600 mx-2">Contact</a>
+                    <a href="bookingHistory.jsp" class=" hover:text-gray-600 mx-2">History</a>
+                    <a href="profile.jsp" class=" hover:text-gray-600 mx-2">Contact</a>
 
                     <%
                         if (session != null && session.getAttribute("role") != null) {
@@ -109,7 +109,8 @@
                         <a href="Delete-movie" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Delete Movie</a>
                         <a href="enterMovieId.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Edit Movie</a>
                         <a href="Add-Cast" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Add Cast</a>
-                       <a href="addTrailers.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Add trailers</a>
+                       <a href="addTrailers.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Add Trailers</a>
+                        <a href="addTheaters.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Add Theaters</a>
 
                     </div>
                 </div>

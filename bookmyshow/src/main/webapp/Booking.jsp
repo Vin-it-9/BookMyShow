@@ -98,8 +98,8 @@
                      </div>
                      <div>
                          <a href="profile.jsp" class=" hover:text-gray-600 mx-2">Profile</a>
-                           <a href="profile.jsp" class=" hover:text-gray-600 mx-2">About</a>
-                             <a href="profile.jsp" class=" hover:text-gray-600 mx-2">Contact</a>
+                         <a href="bookingHistory.jsp" class=" hover:text-gray-600 mx-2">History</a>
+                         <a href="profile.jsp" class=" hover:text-gray-600 mx-2">Contact</a>
 
                          <%
                              if (session != null && session.getAttribute("role") != null) {

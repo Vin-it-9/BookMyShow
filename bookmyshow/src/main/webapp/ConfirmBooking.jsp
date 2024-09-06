@@ -1,7 +1,7 @@
 <%@ page import="java.sql.*, javax.servlet.http.*, javax.servlet.*, java.text.SimpleDateFormat" %>
 <%@ page import="java.util.UUID" %>
 <%
-    // Retrieve parameters from the previous page
+
     String showId = request.getParameter("show_id");
     String movieId = request.getParameter("movie_id");
     String selectedSeats = request.getParameter("selected_seats");
