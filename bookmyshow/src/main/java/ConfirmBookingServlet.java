@@ -24,7 +24,9 @@ public class ConfirmBookingServlet extends HttpServlet {
         PreparedStatement bookingStmt = null;
         PreparedStatement updateSeatsStmt = null;
         PreparedStatement userStmt = null;
+        PreparedStatement movieStmt = null;
         ResultSet rsUser = null;
+        ResultSet rsMovie = null;
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -64,7 +66,16 @@ public class ConfirmBookingServlet extends HttpServlet {
 
                 if (rsUser.next()) {
                     String userEmail = rsUser.getString("email");
-                    sendEmail(userEmail, username, movieTitle, theaterName, showDate, showTime, selectedSeats, totalAmount, verificationKey);
+
+                    String movieQuery = "SELECT poster_url FROM movies WHERE title = ?";
+                    movieStmt = conn.prepareStatement(movieQuery);
+                    movieStmt.setString(1, movieTitle);
+                    rsMovie = movieStmt.executeQuery();
+
+                    if (rsMovie.next()) {
+                        String posterUrl = rsMovie.getString("poster_url");
+                        sendEmail(userEmail, username, movieTitle, theaterName, showDate, showTime, selectedSeats, totalAmount, verificationKey, posterUrl);
+                    }
                 }
 
                 response.sendRedirect("index.jsp?message=Booking Successful");
@@ -77,7 +88,9 @@ public class ConfirmBookingServlet extends HttpServlet {
         } finally {
             try {
                 if (rsUser != null) rsUser.close();
+                if (rsMovie != null) rsMovie.close();
                 if (userStmt != null) userStmt.close();
+                if (movieStmt != null) movieStmt.close();
                 if (updateSeatsStmt != null) updateSeatsStmt.close();
                 if (bookingStmt != null) bookingStmt.close();
                 if (conn != null) conn.close();
@@ -87,11 +100,10 @@ public class ConfirmBookingServlet extends HttpServlet {
         }
     }
 
-    private void sendEmail(String recipientEmail, String username, String movieTitle, String theaterName, String showDate, String showTime, String selectedSeats, String totalAmount, String verificationKey) throws MessagingException {
+    private void sendEmail(String recipientEmail, String username, String movieTitle, String theaterName, String showDate, String showTime, String selectedSeats, String totalAmount, String verificationKey, String posterUrl) throws MessagingException {
         final String senderEmail = "springboot2559@gmail.com";
         final String password = "reds ccxo nfnb phgm";
 
-        // Setup email properties
         Properties properties = new Properties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "587");
@@ -108,14 +120,40 @@ public class ConfirmBookingServlet extends HttpServlet {
         message.setFrom(new InternetAddress(senderEmail));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
         message.setSubject("Booking Confirmation");
-        message.setText("Dear " + username + ",\n\nYour booking for the movie '" + movieTitle + "' at '" + theaterName + "' has been confirmed." +
-                "\n\nShow Date: " + showDate +
-                "\nShow Time: " + showTime +
-                "\nSelected Seats: " + selectedSeats +
-                "\nTotal Amount: Rs. " + totalAmount +
-                "\nVerification Key: " + verificationKey +
-                "\n\nThank you for choosing our service.");
-        Transport.send(message);
 
+        String emailContent = "<html><body style='margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f0f0f0;'>"
+                + "<div style='background-color: #f0f0f0; padding: 20px;'>"
+                + "<div style='max-width: 500px; margin: auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);'>"
+                + "<div style='background-color: #242424; text-align: center; padding: 35px 25px;'>"
+                + "<img src='" + posterUrl + "' alt='Movie Poster' style='width: 100%; max-width: 320px; height: auto; border-radius: 10px; margin-bottom: 10px;'>"
+                + "</div>"
+                + "<div style='padding: 20px 30px;'>"
+                + "<h2 style='color: #333333; font-size: 28px; font-weight: semibold; text-align: center; margin-bottom: 25px;'>Your Booking is Confirmed!</h2>"
+                + "<p style='color: #555555; font-size: 16px; line-height: 1.6;'>Dear <strong>" + username + "</strong>,</p>"
+                + "<p style='color: #666666; font-size: 16px; '>You have successfully booked tickets for <strong>" + movieTitle + "</strong> at <strong>" + theaterName + "</strong>.</p>"
+                + "<div style='margin: 20px 0; padding: 20px; background-color: #f9f9f9; border-radius: 10px; border: 1px solid #e0e0e0;'>"
+                + "<p style='color: #333333; font-size: 16px; margin: 0 0 10px 0;'><strong>Show Date:</strong> " + showDate + "</p>"
+                + "<p style='color: #333333; font-size: 16px; margin: 0 0 10px 0;'><strong>Show Time:</strong> " + showTime + "</p>"
+                + "<p style='color: #333333; font-size: 16px; margin: 0 0 10px 0;'><strong>Selected Seats:</strong> " + selectedSeats + "</p>"
+                + "<p style='color: #333333; font-size: 16px; margin: 0 0 10px 0;'><strong>Total Amount:</strong> Rs. " + totalAmount + "</p>"
+                + "<p style='color: #333333; font-size: 16px; margin: 0 0 10px 0;'><strong>Verification Key:</strong> " + verificationKey + "</p>"
+                + "</div>"
+                + "<p style='color: #777777; font-size: 14px; text-align: center;'>Thank you for booking with us! We hope you enjoy the movie.</p>"
+                + "</div>"
+                + "<div style='background-color: #242424; padding: 20px; text-align: center;'>"
+                + "<p style='color: #cccccc; font-size: 12px; line-height: 1.6;'>For any assistance, contact us at <a href='mailto:springboot2559@gmail.com' style='color: #f39c12; text-decoration: none;'>springboot2559@gmail.com</a>.</p>"
+                + "<p style='color: #cccccc; font-size: 12px;'>© 2024 Movie Booking Service</p>"
+                + "</div>"
+                + "</div>"
+                + "</div>"
+                + "</body></html>";
+
+        message.setContent(emailContent, "text/html");
+
+        Transport.send(message);
     }
+
+
+
+
 }

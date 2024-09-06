@@ -95,14 +95,29 @@ public class RegisterServlet extends HttpServlet {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
             message.setSubject("Registration Successful - BookMyShow");
 
-            // Construct the email body with inline CSS
-            String htmlContent = "<div style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>"
-                    + "<h1 style='color: #2c3e50;'>Welcome to BookMyShow, " + username + "!</h1>"
-                    + "<p style='font-size: 16px;'>Your registration was successful. We are excited to have you as a part of our community!</p>"
-                    + "<p style='font-size: 16px;'>Click the link below to start exploring:</p>"
-                    + "<a href='http://www.bookmyshow.com' style='display: inline-block; background-color: #1abc9c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;'>Visit BookMyShow</a>"
-                    + "<p style='margin-top: 20px;'>Best Regards,<br><span style='color: #2c3e50; font-weight: bold;'>BookMyShow Team</span></p>"
-                    + "</div>";
+            String htmlContent = "<html><body style='margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;'>"
+                    + "<div style='background-color: #f4f4f4; padding: 20px;'>"
+                    + "<div style='max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);'>"
+                    + "<div style='background-color: #242424; text-align: center; padding: 30px;'>"
+                    + "<h1 style='color: #ffffff; font-size: 28px; margin: 0;'>Welcome to BookMyShow, " + username + "!</h1>"
+                    + "</div>"
+                    + "<div style='padding: 30px;'>"
+                    + "<p style='color: #555555; font-size: 16px; line-height: 1.8;'>Your registration was successful, and we are thrilled to have you as part of the BookMyShow community!</p>"
+                    + "<p style='color: #555555; font-size: 16px; line-height: 1.8;'>Click the button below to start exploring and booking your favorite shows:</p>"
+                    + "<div style='text-align: center; margin: 30px 0;'>"
+                    + "<a href='http://www.bookmyshow.com' style='display: inline-block; background-color: #1abc9c; color: #ffffff; padding: 12px 25px; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 5px;'>Visit BookMyShow</a>"
+                    + "</div>"
+                    + "<p style='color: #555555; font-size: 16px; line-height: 1.8;'>We can't wait for you to experience the best in entertainment!</p>"
+                    + "<p style='margin-top: 20px; color: #333333;'>Best Regards,<br>"
+                    + "<span style='color: #2c3e50; font-weight: bold;'>The BookMyShow Team</span></p>"
+                    + "</div>"
+                    + "<div style='background-color: #242424; padding: 20px; text-align: center;'>"
+                    + "<p style='color: #cccccc; font-size: 12px; line-height: 1.6;'>For support, reach us at <a href='mailto:support@bookmyshow.com' style='color: #1abc9c; text-decoration: none;'>support@bookmyshow.com</a>.</p>"
+                    + "<p style='color: #cccccc; font-size: 12px;'>© 2024 BookMyShow. All rights reserved.</p>"
+                    + "</div>"
+                    + "</div>"
+                    + "</div>"
+                    + "</body></html>";
 
             message.setContent(htmlContent, "text/html");
             Transport.send(message);
