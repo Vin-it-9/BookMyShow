@@ -45,20 +45,25 @@
             return;
         }
 
-        // Query to get seats information for the specific theater
-        String seatsQuery = "SELECT `row`, seat_number, is_available " +
+        // Query to get seats based on show_id, including seat_no in the result
+        String seatsQuery = "SELECT `row`, seat_number, seat_no, is_available " +
                             "FROM seats " +
-                            "WHERE theater_id = ?";
+                            "WHERE show_id = ?";
         seatsStmt = conn.prepareStatement(seatsQuery);
-        seatsStmt.setInt(1, theaterId);
+        seatsStmt.setInt(1, Integer.parseInt(showId));  // Filter by show_id
         rsSeats = seatsStmt.executeQuery();
 
-        // Create a map to store seat availability
+        // Create a map to store seat availability and seat_no
         Map<String, Map<Integer, Boolean>> seatMap = new HashMap<>();
+        Map<String, String> seatNoMap = new HashMap<>();  // Store seat_no for reference
         while (rsSeats.next()) {
             String seatRow = rsSeats.getString("row");
             int seatNumber = rsSeats.getInt("seat_number");
+            String seatNo = rsSeats.getString("seat_no");
             boolean isAvailable = rsSeats.getBoolean("is_available");
+
+            // Store seat_no mapped to row and seatNumber
+            seatNoMap.put(seatRow + "_" + seatNumber, seatNo);
 
             Map<Integer, Boolean> seats = seatMap.get(seatRow);
             if (seats == null) {
@@ -67,6 +72,7 @@
             }
             seats.put(seatNumber, isAvailable);
         }
+
 %>
 
 <!DOCTYPE html>
@@ -117,7 +123,7 @@
             }
 
             $('.seat-button').click(function() {
-                if ($(this).hasClass('available-seat')) {
+                if ($(this).hasClass('available-seat') && !$(this).hasClass('disabled')) {
                     $(this).toggleClass('selected-seat');
                     updateTotalAmount(); // Update total amount after each click
                 }
@@ -161,13 +167,14 @@
                         <% for (int i = 1; i <= seats.size(); i++) {
                             boolean isAvailable = seats.getOrDefault(i, false);
                             String seatId = row + "_" + i;
+                            String seatNo = seatNoMap.get(seatId);  // Get the seat_no directly
                         %>
                         <button type="button" class="seat-button
-                                <% if (isAvailable) { %> available-seat <% } else { %> unavailable-seat <% } %>"
-                                data-seat-id="<%= seatId %>"
-                                <% if (!isAvailable) { %> disabled <% } %>>
+                                <% if (isAvailable) { %> available-seat <% } else { %> unavailable-seat disabled <% } %>"data-seat-id="<%= seatNo %>"  <!-- Use seat_no here -->
+                                <% if (!isAvailable) { %>  <% } %>
                             <%= i %>
                         </button>
+
                         <% } %>
                     </div>
                 </div>

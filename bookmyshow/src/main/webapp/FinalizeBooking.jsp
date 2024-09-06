@@ -1,116 +1,137 @@
-<%@ page import="java.sql.*" %>
-<%@ page import="javax.servlet.http.*, javax.servlet.*" %>
+<%@ page import="java.sql.*, javax.servlet.http.*, javax.servlet.*, java.text.SimpleDateFormat" %>
+<%
+    Connection conn = null;
+    PreparedStatement seatUpdateStmt = null;
+    PreparedStatement bookingInsertStmt = null;
+    boolean success = false;
+
+    String dbURL = "jdbc:mysql://localhost:3306/book";
+    String dbUser = "root";
+    String dbPassword = "root";
+
+    try {
+        // Load the database driver and establish a connection
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+        // Set auto-commit to false to start the transaction
+        conn.setAutoCommit(false);
+
+        // Retrieve booking details from session
+        String showId = (String) session.getAttribute("showId");
+        String selectedSeats = (String) session.getAttribute("selectedSeats");
+        String username = (String) session.getAttribute("username");
+        String movieTitle = (String) session.getAttribute("movieTitle");
+        String theaterName = (String) session.getAttribute("theaterName");
+        java.sql.Date showDate = (java.sql.Date) session.getAttribute("showDate");
+        String showTime = (String) session.getAttribute("showTime");
+        double totalAmount = (Double) session.getAttribute("totalAmount");
+        String verificationKey = (String) session.getAttribute("verificationKey");
+
+        // Ensure that the parameters are not null
+        if (showId == null || selectedSeats == null || username == null || movieTitle == null ||
+            theaterName == null || showDate == null || showTime == null || totalAmount == 0) {
+            out.println("<p class='text-red-600'>Invalid request parameters. Please try again.</p>");
+            return;
+        }
+
+        // Convert showTime from String to java.sql.Time
+        java.sql.Time sqlShowTime = null;
+        try {
+            // Append ":00" to the showTime if it only contains HH:MM
+            if (showTime.length() == 5) {
+                showTime += ":00";  // Convert HH:MM to HH:MM:SS
+            }
+            sqlShowTime = java.sql.Time.valueOf(showTime); // Ensuring correct format
+        } catch (IllegalArgumentException e) {
+            out.println("<p class='text-red-600'>Invalid time format for show time. Please ensure it's in HH:MM format.</p>");
+            return;
+        }
+
+        // Insert booking information into the bookings table
+        String bookingInsertQuery = "INSERT INTO bookings (show_id, username, movie_title, theater_name, show_date, show_time, total_amount, selected_seats, verification_key) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        bookingInsertStmt = conn.prepareStatement(bookingInsertQuery);
+        bookingInsertStmt.setInt(1, Integer.parseInt(showId));
+        bookingInsertStmt.setString(2, username);
+        bookingInsertStmt.setString(3, movieTitle);
+        bookingInsertStmt.setString(4, theaterName);
+        bookingInsertStmt.setDate(5, showDate);
+        bookingInsertStmt.setTime(6, sqlShowTime);
+        bookingInsertStmt.setBigDecimal(7, new java.math.BigDecimal(totalAmount));
+        bookingInsertStmt.setString(8, selectedSeats);
+        bookingInsertStmt.setString(9, verificationKey);
+        bookingInsertStmt.executeUpdate();
+
+        // Process selected seats
+        String[] seats = selectedSeats.split(",");
+        for (String seat : seats) {
+            seat = seat.trim(); // Clean up any extra spaces
+
+            // Update the seat availability in the `seats` table
+            String seatUpdateQuery = "UPDATE seats SET is_available = 0 WHERE show_id = ? AND seat_no = ?";
+            seatUpdateStmt = conn.prepareStatement(seatUpdateQuery);
+            seatUpdateStmt.setInt(1, Integer.parseInt(showId));
+            seatUpdateStmt.setString(2, seat);
+            int rowsAffected = seatUpdateStmt.executeUpdate();
+
+            if (rowsAffected == 0) {
+                out.println("<p class='text-red-600'>No matching seat found for seat number: " + seat + "</p>");
+                conn.rollback(); // Rollback transaction if seat update fails
+                return;
+            }
+        }
+
+        // Commit the transaction if everything is successful
+        conn.commit();
+        success = true;
+%>
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Finalize Booking</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col justify-center items-center">
+
     <div class="bg-white shadow-md rounded-lg p-8 w-96">
-        <h1 class="text-2xl font-bold text-blue-600 mb-4">Booking Confirmation</h1>
+        <h1 class="text-2xl font-bold text-blue-600 mb-4">Booking Confirmed</h1>
 
         <%
-            Connection conn = null;
-            PreparedStatement theaterIdStmt = null;
-            PreparedStatement seatUpdateStmt = null;
-            ResultSet rsTheaterId = null;
-
-            String dbURL = "jdbc:mysql://localhost:3306/book";
-            String dbUser = "root";
-            String dbPassword = "root";
-
-            try {
-                // Load the database driver and establish a connection
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-
-                // Get user inputs from the request
-                String showId = request.getParameter("show_id");
-                String selectedSeats = request.getParameter("selected_seats");
-                String username = request.getParameter("username");
-                String movieTitle = request.getParameter("movie_title");
-                String theaterName = request.getParameter("theater_name");
-                String showDate = request.getParameter("show_date");
-                String showTime = request.getParameter("show_time");
-                String totalAmount = request.getParameter("total_amount");
-                String verificationKey = request.getParameter("verification_key");
-
-                // Ensure that the parameters are not null
-                if (showId == null || selectedSeats == null || username == null || movieTitle == null ||
-                    theaterName == null || showDate == null || showTime == null || totalAmount == null) {
-                    out.println("Invalid request parameters.");
-                    return;
-                }
-
-                // Process selected seats
-                String[] seats = selectedSeats.split(",");
-                for (String seat : seats) {
-                    seat = seat.trim(); // Clean up any extra spaces
-                    String[] seatInfo = seat.split("_"); // Split using '_'
-
-                    if (seatInfo.length == 2) { // Ensure we have both row and seat number
-                        String row = seatInfo[0];
-                        int seatNumber;
-                        try {
-                            seatNumber = Integer.parseInt(seatInfo[1]);
-
-                            // Get the theater ID for the given show
-                            String theaterIdQuery = "SELECT theater_id FROM movie_shows WHERE show_id = ?";
-                            theaterIdStmt = conn.prepareStatement(theaterIdQuery);
-                            theaterIdStmt.setInt(1, Integer.parseInt(showId));
-                            rsTheaterId = theaterIdStmt.executeQuery();
-
-                            if (rsTheaterId.next()) {
-                                int theaterId = rsTheaterId.getInt("theater_id");
-
-                                // Update the seat availability in the `seats` table
-                                String seatUpdateQuery = "UPDATE seats SET is_available = 0 WHERE theater_id = ? AND row = ? AND seat_number = ?";
-                                seatUpdateStmt = conn.prepareStatement(seatUpdateQuery);
-                                seatUpdateStmt.setInt(1, theaterId);
-                                seatUpdateStmt.setString(2, row);
-                                seatUpdateStmt.setInt(3, seatNumber);
-                                seatUpdateStmt.executeUpdate();
-                            } else {
-                                out.println("Theater ID not found for the given show ID.");
-                            }
-                        } catch (NumberFormatException e) {
-                            // Handle invalid seat number format
-                            out.println("Invalid seat number format: " + seatInfo[1]);
-                        }
-                    } else {
-                        // Handle invalid seat format
-                        out.println("Invalid seat format: " + seat);
-                    }
-                }
+            if (success) {
         %>
-
-        <!-- Booking Details Section -->
-        <h2 class="text-xl font-semibold mb-2">Booking Details</h2>
-        <p>Username: <%= username %></p>
-        <p>Movie Title: <%= movieTitle %></p>
-        <p>Theater Name: <%= theaterName %></p>
-        <p>Show Date: <%= showDate %></p>
-        <p>Show Time: <%= showTime %></p>
-        <p>Total Amount: <%= totalAmount %> Rs</p>
-        <p>Selected Seats: <%= selectedSeats %></p>
-        <p>Verification Key: <%= verificationKey %></p>
-
-        <p class="mt-4 text-green-600 font-bold">Thank you! Your booking has been successfully confirmed.</p>
-        <p class="text-gray-700">Please keep your verification key safe for future reference.</p>
-
+        <p class="text-lg font-medium text-gray-700">Thank you! Your booking has been successfully confirmed.</p>
+        <p class="text-lg font-medium text-gray-700">Please keep your verification key safe for future reference.</p>
+        <p class="text-lg font-medium text-gray-700">Verification Key: <%= verificationKey %></p>
         <%
-            } catch (Exception e) {
-                e.printStackTrace();
-                out.println("An error occurred: " + e.getMessage());
-            } finally {
-                // Close resources
-                try { if (rsTheaterId != null) rsTheaterId.close(); } catch (SQLException e) { e.printStackTrace(); }
-                try { if (theaterIdStmt != null) theaterIdStmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-                try { if (seatUpdateStmt != null) seatUpdateStmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-                try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+            } else {
+        %>
+        <p class="text-red-600">There was an error confirming your booking. Please try again.</p>
+        <%
             }
         %>
     </div>
+
 </body>
 </html>
+
+<%
+    } catch (ClassNotFoundException | SQLException e) {
+        e.printStackTrace();
+        out.println("<p class='text-red-600'>An error occurred: " + e.getMessage() + "</p>");
+        if (conn != null) {
+            try {
+                conn.rollback(); // Rollback transaction on error
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+        }
+    } finally {
+        // Close resources
+        try { if (seatUpdateStmt != null) seatUpdateStmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+        try { if (bookingInsertStmt != null) bookingInsertStmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+        try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+    }
+%>

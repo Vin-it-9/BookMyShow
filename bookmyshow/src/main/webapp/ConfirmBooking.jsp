@@ -1,10 +1,16 @@
 <%@ page import="java.sql.*, javax.servlet.http.*, javax.servlet.*, java.text.SimpleDateFormat" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.UUID" %>
 <%
+    // Get parameters from the previous page
     String showId = request.getParameter("show_id");
     String movieId = request.getParameter("movie_id");
     String selectedSeats = request.getParameter("selected_seats");
-    String username = (String) session.getAttribute("username");
+    String username = (String) session.getAttribute("username"); // Assuming username is stored in session
+
+    if (showId == null || movieId == null || selectedSeats == null || username == null) {
+        out.println("Missing parameters. Please go back and try again.");
+        return;
+    }
 
     Connection conn = null;
     PreparedStatement movieStmt = null;
@@ -18,7 +24,7 @@
     SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
 
     double ticketPrice = 0.0;
-    java.sql.Date showDate = null; // Use java.sql.Date to avoid ambiguity
+    java.sql.Date showDate = null; // Use java.sql.Date for SQL compatibility
     String showTime = "";
     double totalAmount = 0.0;
     String movieTitle = "";
@@ -37,6 +43,9 @@
 
         if (rsMovie.next()) {
             movieTitle = rsMovie.getString("title");
+        } else {
+            out.println("Movie not found for the given movie ID.");
+            return;
         }
 
         // Get show details
@@ -49,7 +58,7 @@
             showDate = rsShow.getDate("show_date");
             showTime = timeFormat.format(rsShow.getTime("show_time"));
             ticketPrice = rsShow.getDouble("ticket_price");
-            totalAmount = selectedSeats.split(",").length * ticketPrice;
+            totalAmount = selectedSeats.split(",").length * ticketPrice; // Calculate total amount
 
             // Get theater details
             int theaterId = rsShow.getInt("theater_id");
@@ -60,11 +69,27 @@
 
             if (rsTheater.next()) {
                 theaterName = rsTheater.getString("name");
+            } else {
+                out.println("Theater not found for the given theater ID.");
+                return;
             }
         } else {
-            out.println("No show information found for the given ID.");
+            out.println("Show not found for the given show ID.");
             return;
         }
+
+        // Store booking information in the session
+        session.setAttribute("showId", showId);
+        session.setAttribute("movieId", movieId);
+        session.setAttribute("selectedSeats", selectedSeats);
+        session.setAttribute("username", username);
+        session.setAttribute("movieTitle", movieTitle);
+        session.setAttribute("theaterName", theaterName);
+        session.setAttribute("showDate", showDate);
+        session.setAttribute("showTime", showTime);
+        session.setAttribute("totalAmount", totalAmount);
+        session.setAttribute("verificationKey", verificationKey);
+
 %>
 
 <!DOCTYPE html>
@@ -93,12 +118,6 @@
         </div>
 
         <form action="FinalizeBooking.jsp" method="POST">
-            <input type="hidden" name="show_id" value="<%= showId %>">
-            <input type="hidden" name="movie_id" value="<%= movieId %>">
-            <input type="hidden" name="selected_seats" value="<%= selectedSeats %>">
-            <input type="hidden" name="total_amount" value="<%= totalAmount %>">
-            <input type="hidden" name="verification_key" value="<%= verificationKey %>">
-
             <button type="submit" class="bg-green-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-700 transition duration-300">
                 Confirm and Proceed to Payment
             </button>
@@ -112,6 +131,7 @@
     } catch (ClassNotFoundException | SQLException e) {
         e.printStackTrace();
     } finally {
+        // Close all resources in the reverse order of their opening
         if (rsMovie != null) try { rsMovie.close(); } catch (SQLException e) { e.printStackTrace(); }
         if (movieStmt != null) try { movieStmt.close(); } catch (SQLException e) { e.printStackTrace(); }
         if (rsShow != null) try { rsShow.close(); } catch (SQLException e) { e.printStackTrace(); }
