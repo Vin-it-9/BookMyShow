@@ -73,7 +73,7 @@ CREATE TABLE movie_shows (
 ```bash
 CREATE TABLE seats (
     seat_id INT NOT NULL AUTO_INCREMENT,
-    row CHAR(1) NOT NULL,
+    `row` CHAR(1) NOT NULL,
     seat_number INT NOT NULL,
     seat_no VARCHAR(10) NOT NULL,
     show_id INT NOT NULL,
