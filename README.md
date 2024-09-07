@@ -90,7 +90,6 @@ CREATE TABLE seats (
 ```bash
 CREATE TABLE bookings (
     booking_id INT NOT NULL AUTO_INCREMENT,
-    show_id INT NOT NULL,
     username VARCHAR(255) NOT NULL,
     movie_title VARCHAR(255) NOT NULL,
     theater_name VARCHAR(255) NOT NULL,
