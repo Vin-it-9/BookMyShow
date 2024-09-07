@@ -57,7 +57,6 @@
                             }
                         }
                     %>
-                    <!-- Logout Form or Login Link -->
                     <%
                         if (session != null && session.getAttribute("username") != null) {
                     %>
@@ -75,7 +74,6 @@
             </div>
         </nav>
 
-    <!-- Main Content -->
     <div class="container mx-auto px-4 py-6 pl-32 pr-32">
         <div class="flex-grow">
             <h3 class="text-lg font-semibold text-gray-800 text-2xl font-bold">
@@ -99,19 +97,23 @@
                     String role = (String) session.getAttribute("role");
                     if ("admin".equals(role)) {
             %>
+
             <div class="mt-6 bg-white shadow-md rounded p-6">
                 <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
                 <div class="mt-4">
-                    <div class="mt-4">
-                        <a href="All-Users" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Users</a>
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <a href="All-Users" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Users</a>
                         <a href="All-Movies" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Movies</a>
+                        <a href="allShows.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Shows</a>
+                         <a href="alltheaters.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Theaters</a>
                         <a href="Add-Movie" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Add Movies</a>
-                        <a href="Delete-movie" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Delete Movie</a>
-                        <a href="enterMovieId.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Edit Movie</a>
-                        <a href="Add-Cast" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Add Cast</a>
-                       <a href="addTrailers.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Add Trailers</a>
-                        <a href="addTheaters.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded ml-2">Add Theaters</a>
-
+                        <a href="Delete-movie" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Delete Movie</a>
+                        <a href="enterMovieId.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Edit Movie</a>
+                        <a href="Add-Cast" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Add Cast</a>
+                        <a href="addTrailers.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Add Trailers</a>
+                        <a href="addTheaters.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Add Theaters</a>
+                        <a href="addShows.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Add Shows</a>
+                        <a href="addSeats.jsp" class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded">Add Seats</a>
                     </div>
                 </div>
             </div>
@@ -119,8 +121,6 @@
                     }
                 }
             %>
-
-            <!-- Movies Section -->
             <div class=" mt-6">
                 <h1 class="text-3xl font-bold mb-5">Now Showing</h1>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
@@ -170,8 +170,5 @@
             </div>
         </div>
     </div>
-
-
-
 </body>
 </html>

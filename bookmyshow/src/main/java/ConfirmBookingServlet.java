@@ -10,6 +10,7 @@ import javax.mail.internet.*;
 @WebServlet("/ConfirmBooking")
 public class ConfirmBookingServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String showId = request.getParameter("show_id");
         String movieTitle = request.getParameter("movieTitle");
         String theaterName = request.getParameter("theaterName");
@@ -29,20 +30,20 @@ public class ConfirmBookingServlet extends HttpServlet {
         ResultSet rsMovie = null;
 
         try {
+
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/book", "root", "root");
 
-            String bookingQuery = "INSERT INTO bookings (show_id, username, movie_title, theater_name, show_date, show_time, total_amount, selected_seats, verification_key) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String bookingQuery = "INSERT INTO bookings ( username, movie_title, theater_name, show_date, show_time, total_amount, selected_seats, verification_key) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             bookingStmt = conn.prepareStatement(bookingQuery);
-            bookingStmt.setInt(1, Integer.parseInt(showId));
-            bookingStmt.setString(2, username);
-            bookingStmt.setString(3, movieTitle);
-            bookingStmt.setString(4, theaterName);
-            bookingStmt.setDate(5, Date.valueOf(showDate));
-            bookingStmt.setTime(6, Time.valueOf(showTime));
-            bookingStmt.setBigDecimal(7, new java.math.BigDecimal(totalAmount));
-            bookingStmt.setString(8, selectedSeats);
-            bookingStmt.setString(9, verificationKey);
+            bookingStmt.setString(1, username);
+            bookingStmt.setString(2, movieTitle);
+            bookingStmt.setString(3, theaterName);
+            bookingStmt.setDate(4, Date.valueOf(showDate));
+            bookingStmt.setTime(5, Time.valueOf(showTime));
+            bookingStmt.setBigDecimal(6, new java.math.BigDecimal(totalAmount));
+            bookingStmt.setString(7, selectedSeats);
+            bookingStmt.setString(8, verificationKey);
 
             int bookingResult = bookingStmt.executeUpdate();
 

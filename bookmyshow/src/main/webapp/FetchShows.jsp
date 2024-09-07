@@ -55,7 +55,6 @@
                         showCount = 0;
             %>
             <tr class="bg-gray-50 hover:bg-gray-100 transition duration-300 ease-in-out border-b border-gray-200">
-                <!-- Fixed-width column for theater name to ensure alignment -->
                 <td class="py-4 px-6 font-bold text-gray-800 w-1/4 align-top"><%= theaterName %></td>
                 <td class="py-4 px-6">
                     <div class="flex flex-wrap gap-3">
@@ -71,7 +70,7 @@
                         <input type="hidden" name="show_id" value="<%= showId %>">
                         <input type="hidden" name="movie_id" value="<%= movieId %>">
                         <input type="hidden" name="theater_name" value="<%= theaterName %>">
-                        <button type="submit" class=" text-green-500 border border-gray-400 font-semibold py-2 px-4 rounded-sm hover:bg-green-600 transition duration-200 ease-in-out ">
+                        <button type="submit" class=" text-green-500 border border-gray-400 font-semibold py-2 px-4 rounded-sm hover:bg-green-600 hover:text-white transition duration-200 ease-in-out ">
                             <%= showTime12 %>
                         </button>
                     </form>

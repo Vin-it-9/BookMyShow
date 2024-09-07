@@ -14,6 +14,7 @@ public class AddTrailersServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String movieId = request.getParameter("movie_id");
         String[] trailerUrls = request.getParameterValues("trailer_url");
 
@@ -28,7 +29,6 @@ public class AddTrailersServlet extends HttpServlet {
             pstmt = conn.prepareStatement(sql);
 
             for (String trailerUrl : trailerUrls) {
-                // Convert YouTube URL to embed format if necessary
                 if (trailerUrl.contains("youtube.com/watch?v=")) {
                     String videoId = trailerUrl.substring(trailerUrl.indexOf("v=") + 2);
                     trailerUrl = "https://www.youtube.com/embed/" + videoId;

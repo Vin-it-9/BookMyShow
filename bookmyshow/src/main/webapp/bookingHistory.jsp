@@ -124,10 +124,6 @@
                     </p>
                 </div>
             </div>
-
-
-
-
             <%
                     }
                 } catch (Exception e) {
