@@ -13,7 +13,7 @@
 <%@ page import="com.itextpdf.text.pdf.PdfPCell" %>
 
 <%
-    String jdbcURL = "jdbc:mysql://localhost:3306/book"; // replace with your database URL
+    String jdbcURL = "jdbc:mysql://localhost:3306/book";
     String jdbcUsername = "root";
     String jdbcPassword = "root";
 
@@ -22,7 +22,7 @@
     ResultSet resultSet = null;
 
     try {
-        Class.forName("com.mysql.jdbc.Driver"); // Make sure to use the correct JDBC driver class
+        Class.forName("com.mysql.jdbc.Driver");
         connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
         statement = connection.createStatement();
         resultSet = statement.executeQuery("SELECT * FROM movies");

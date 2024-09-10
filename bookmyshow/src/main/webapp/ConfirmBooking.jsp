@@ -48,7 +48,6 @@
             return;
         }
 
-        // Fetch show details
         String showQuery = "SELECT show_date, show_time, ticket_price, theater_id FROM movie_shows WHERE show_id = ?";
         showStmt = conn.prepareStatement(showQuery);
         showStmt.setInt(1, Integer.parseInt(showId));
@@ -60,7 +59,6 @@
             ticketPrice = rsShow.getDouble("ticket_price");
             totalAmount = selectedSeats.split(",").length * ticketPrice;
 
-            // Fetch theater details
             int theaterId = rsShow.getInt("theater_id");
             String theaterQuery = "SELECT name FROM theaters WHERE theater_id = ?";
             theaterStmt = conn.prepareStatement(theaterQuery);

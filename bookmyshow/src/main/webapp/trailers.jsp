@@ -43,7 +43,6 @@
                                             }
                                         }
                                     %>
-                                    <!-- Logout Form or Login Link -->
                                     <%
                                         if (session != null && session.getAttribute("username") != null) {
                                     %>
@@ -61,7 +60,6 @@
                             </div>
                         </nav>
 
-    <!-- Main Content - Movie Trailers Section -->
     <div class="container mx-auto mt-10 mb-10 flex justify-center">
         <div class="w-full md:w-2/3">
 
@@ -87,10 +85,8 @@
                     if (rs.next()) {
             %>
 
-            <!-- Trailers Grid (2 trailers per row in larger screens) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <%
-                    // Loop through all trailers for the movie
                     do {
                         String trailerUrl = rs.getString("trailer_url");
                 %>
@@ -107,7 +103,6 @@
 
             <%
                     } else {
-                        // If no trailers are found
                         out.println("<p class='text-red-500 text-center'>No trailers available for this movie.</p>");
                     }
                 } catch (ClassNotFoundException | SQLException e) {
@@ -115,7 +110,7 @@
                     e.printStackTrace();
                     out.println("<p class='text-red-500 text-center'>Error retrieving trailers. Please try again later.</p>");
                 } finally {
-                    // Ensure resources are closed properly
+
                     if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
                     if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
                     if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }

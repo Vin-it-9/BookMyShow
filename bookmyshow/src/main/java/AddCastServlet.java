@@ -39,7 +39,7 @@ public class AddCastServlet extends HttpServlet {
             if (rowsAffected > 0) {
                 response.sendRedirect(request.getContextPath() + "/");
             } else {
-                response.sendRedirect("error.jsp"); // Redirect to an error page
+                response.sendRedirect("error.jsp");
             }
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();

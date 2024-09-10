@@ -76,7 +76,6 @@ public class RegisterServlet extends HttpServlet {
         final String senderEmail = "springboot2559@gmail.com";
         final String senderPassword = "reds ccxo nfnb phgm";
 
-        // Email properties
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");

@@ -22,7 +22,6 @@
     <div class="max-w-xl mx-auto bg-white shadow-lg rounded-lg p-8">
         <h1 class="text-4xl font-bold mb-6 text-center text-blue-600">Add Theaters</h1>
 
-        <!-- Form for adding theaters -->
         <form action="AddTheatersServlet" method="post" class="space-y-6">
             <div>
                 <label for="city" class="block text-gray-700 font-semibold mb-2">City:</label>
@@ -30,19 +29,16 @@
             </div>
 
             <div id="theatersContainer">
-                <!-- First theater name input -->
                 <div class="theater-field">
                     <label for="theater_name" class="block text-gray-700 font-semibold mb-2">Theater Name:</label>
                     <input type="text" name="theater_name" required placeholder="Enter theater name" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
             </div>
 
-            <!-- Button to add more theater input fields -->
             <button type="button" onclick="addTheaterInput()" class="w-full bg-gray-500 text-white font-bold py-3 rounded-lg hover:bg-gray-700 transition duration-300">
                 Add More Theaters
             </button>
 
-            <!-- Submit Button -->
             <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition duration-300">
                 Submit Theaters
             </button>

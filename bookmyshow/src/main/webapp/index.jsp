@@ -91,7 +91,6 @@
                 %>
             </h3>
 
-            <!-- Admin Dashboard Section -->
             <%
                 if (session != null && session.getAttribute("role") != null) {
                     String role = (String) session.getAttribute("role");

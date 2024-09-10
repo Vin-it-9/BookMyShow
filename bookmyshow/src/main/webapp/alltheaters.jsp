@@ -13,7 +13,7 @@
 <%@ page import="com.itextpdf.text.pdf.PdfPCell" %>
 
 <%
-    String jdbcURL = "jdbc:mysql://localhost:3306/book"; // replace with your database URL
+    String jdbcURL = "jdbc:mysql://localhost:3306/book";
     String jdbcUsername = "root";
     String jdbcPassword = "root";
 
@@ -22,7 +22,7 @@
     ResultSet resultSet = null;
 
     try {
-        Class.forName("com.mysql.jdbc.Driver"); // Ensure correct JDBC driver is used
+        Class.forName("com.mysql.jdbc.Driver");
         connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
         statement = connection.createStatement();
         resultSet = statement.executeQuery("SELECT * FROM theaters");
@@ -38,19 +38,17 @@
 
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
             document.add(new Paragraph("Theater Information", titleFont));
-            document.add(new Paragraph(" ")); // Empty line
+            document.add(new Paragraph(" "));
 
-            PdfPTable table = new PdfPTable(3); // Number of columns for theaters table
+            PdfPTable table = new PdfPTable(3);
             table.setWidthPercentage(100);
             table.setSpacingBefore(10f);
             table.setSpacingAfter(10f);
 
-            // Table Headers
             PdfPCell header1 = new PdfPCell(new Paragraph("Theater ID"));
             PdfPCell header2 = new PdfPCell(new Paragraph("Name"));
             PdfPCell header3 = new PdfPCell(new Paragraph("Location"));
 
-            // Style Headers
             header1.setBackgroundColor(BaseColor.LIGHT_GRAY);
             header1.setPadding(8);
             header2.setBackgroundColor(BaseColor.LIGHT_GRAY);
@@ -58,12 +56,10 @@
             header3.setBackgroundColor(BaseColor.LIGHT_GRAY);
             header3.setPadding(8);
 
-            // Add Headers to Table
             table.addCell(header1);
             table.addCell(header2);
             table.addCell(header3);
 
-            // Populate table with data
             while (resultSet.next()) {
                 table.addCell(resultSet.getString("theater_id"));
                 table.addCell(resultSet.getString("name"));

@@ -8,7 +8,7 @@
     String selectedSeats = request.getParameter("selectedSeats");
     String totalAmount = request.getParameter("totalAmount");
     String verificationKey = request.getParameter("verificationKey");
-    String showId = request.getParameter("show_id"); // Get show_id from hidden input
+    String showId = request.getParameter("show_id");
 
     Connection conn = null;
     PreparedStatement bookingStmt = null;
@@ -18,21 +18,18 @@
     SimpleDateFormat time24HourFormat = new SimpleDateFormat("HH:mm:ss");
 
     try {
-        // Convert the 12-hour format showTime into a 24-hour format
         java.util.Date parsedTime = time12HourFormat.parse(showTime);
         String formattedShowTime = time24HourFormat.format(parsedTime);
 
-        // Establish database connection
         Class.forName("com.mysql.cj.jdbc.Driver");
         conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/book", "root", "root");
 
-        // Insert booking into the database
         String bookingQuery = "INSERT INTO bookings (movie_title, theater_name, show_date, show_time, selected_seats, total_amount, verification_key) VALUES (?, ?, ?, ?, ?, ?, ?)";
         bookingStmt = conn.prepareStatement(bookingQuery);
         bookingStmt.setString(1, movieTitle);
         bookingStmt.setString(2, theaterName);
-        bookingStmt.setString(3, showDate);  // Assuming the showDate is in a valid format
-        bookingStmt.setString(4, formattedShowTime);  // Using 24-hour format for time
+        bookingStmt.setString(3, showDate);
+        bookingStmt.setString(4, formattedShowTime);
         bookingStmt.setString(5, selectedSeats);
         bookingStmt.setDouble(6, Double.parseDouble(totalAmount));
         bookingStmt.setString(7, verificationKey);
@@ -40,7 +37,6 @@
         int rowsAffected = bookingStmt.executeUpdate();
 
         if (rowsAffected > 0) {
-            // Update seat availability
             String seatUpdateQuery = "UPDATE movie_shows SET available_seats = available_seats - ? WHERE show_id = ?";
             seatUpdateStmt = conn.prepareStatement(seatUpdateQuery);
             seatUpdateStmt.setInt(1, selectedSeats.split(",").length);

@@ -47,7 +47,6 @@
                     if (!theaterName.equals(currentTheater)) {
                         if (showCount > 0) {
             %>
-                        <!-- Close previous theater showtimes div -->
                         </div></td></tr>
             <%
                         }

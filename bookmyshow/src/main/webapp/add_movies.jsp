@@ -22,16 +22,16 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Duration (minutes):</label>
-                    <input type="number" name="duration" placeholder="e.g., 120" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="number" name="duration" placeholder="" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Rating:</label>
-                    <input type="text" name="rating" placeholder="e.g., PG-13" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" name="rating" placeholder="" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
             </div>
             <div>
                 <label class="block text-gray-700 font-semibold mb-2">Language:</label>
-                <input type="text" name="language" placeholder="e.g., English" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" name="language" placeholder="" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
             <div>
                 <label class="block text-gray-700 font-semibold mb-2">Release Date:</label>
@@ -44,16 +44,16 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Poster URL:</label>
-                    <input type="text" name="poster_url" placeholder="e.g., https://example.com/poster.jpg" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" name="poster_url" placeholder="" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Image URL:</label>
-                    <input type="text" name="image_url" placeholder="e.g., https://example.com/image.jpg" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" name="image_url" placeholder="" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
             </div>
             <div>
                 <label class="block text-gray-700 font-semibold mb-2">Trailer URL:</label>
-                <input type="text" name="trailer_url" placeholder="e.g., https://youtube.com/trailer" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" name="trailer_url" placeholder="" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
             <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition duration-300">Add Movie</button>
         </form>

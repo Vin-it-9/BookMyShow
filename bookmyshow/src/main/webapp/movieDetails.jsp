@@ -26,7 +26,6 @@
                 conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/book", "root", "root");
 
-                // Retrieve movie details
                 String sql = "SELECT * FROM movies WHERE movie_id = ?";
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setInt(1, movie_id);
@@ -72,7 +71,6 @@
                                     }
                                 }
                             %>
-                            <!-- Logout Form or Login Link -->
                             <%
                                 if (session != null && session.getAttribute("username") != null) {
                             %>
@@ -94,16 +92,13 @@
                     String movieId = request.getParameter("movie_id");
                 %>
 
-        <!-- Movie Detail Card -->
         <div class="bg-gray-800 shadow-lg overflow-hidden pl-40 pr-40 p-6 pb-14"
              style="background-image: linear-gradient(90deg, rgb(26, 26, 26) 24.97%, rgb(26, 26, 26) 38.3%, rgba(26, 26, 26, 0.04) 77.47%, rgb(26, 26, 26) 100%), url('<%= image_url %>');  background-position: center;   background-size: cover; background-repeat: no-repeat;">
             <div class="flex flex-col md:flex-row">
-                <!-- Movie Poster -->
                 <div class="w-60 relative">
                     <img src="<%= posterUrl %>" alt="<%= title %>" class="w-full h-full object-cover">
                     <span class="absolute left-0 right-0 bg-black text-center text-white px-2 py-1">In cinemas</span>
                 </div>
-                <!-- Movie Details -->
                 <div class="p-6 flex flex-col justify-between md:w-2/3">
                     <div>
                         <h1 class="text-4xl font-bold mb-4 text-gray-100"><%= title %></h1>
@@ -132,8 +127,6 @@
           <p class=" mb-4"><%= description  %></p>
 
         </div>
-
-        <!-- Cast Section -->
         <div class= "mr-32 ml-32 p-4 mt-3  border-gray-400  border-b ">
         <h2 class="text-2xl md:text-3xl text-black font-bold   ">Cast</h2>
         <div class="grid grid-cols-2 sm:grid-cols-6 md:grid-cols-7 ">
@@ -148,7 +141,6 @@
                     String role = rsCast.getString("role");
                     String profileImageUrl = rsCast.getString("profile_image_url");
             %>
-            <!-- Cast Card -->
             <div class=" rounded-lg text-center hover:shadow-lg transition-all pt-4 ">
                 <img src="<%= profileImageUrl %>" alt="<%= name %>" class="w-28 h-28 mx-auto rounded-full mb-4 object-cover ">
                 <h3 class="text-m text-black"><%= name %></h3>

@@ -11,7 +11,6 @@
     <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-8">
         <h1 class="text-4xl font-bold mb-6 text-center text-blue-600">Edit Movie Details</h1>
         <form action="EditMovieServlet" method="post" class="space-y-6">
-            <!-- Hidden input to pass the movie_id -->
             <input type="hidden" name="movie_id" value="<%= request.getAttribute("movieId") %>">
 
             <div>

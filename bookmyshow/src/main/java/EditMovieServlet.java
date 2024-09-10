@@ -15,7 +15,6 @@ public class EditMovieServlet extends HttpServlet {
         String movieIdStr = request.getParameter("movie_id");
         int movieId = Integer.parseInt(movieIdStr);
 
-        // Fetch movie details from database
         try (Connection conn = DatabaseConnection.initializeDatabase()) {
             String query = "SELECT * FROM movies WHERE movie_id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -23,7 +22,6 @@ public class EditMovieServlet extends HttpServlet {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // Set movie details as request attributes
                 request.setAttribute("movieId", movieId);
                 request.setAttribute("title", rs.getString("title"));
                 request.setAttribute("genre", rs.getString("genre"));
@@ -62,7 +60,6 @@ public class EditMovieServlet extends HttpServlet {
         String trailerUrl = request.getParameter("trailer_url");
         String imageUrl = request.getParameter("image_url");
 
-        // Update movie details in the database
         try (Connection conn = DatabaseConnection.initializeDatabase()) {
             String query = "UPDATE movies SET title = ?, genre = ?, duration = ?, rating = ?, language = ?, release_date = ?, description = ?, poster_url = ?, trailer_url = ?, image_url = ? WHERE movie_id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);

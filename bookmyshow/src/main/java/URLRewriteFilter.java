@@ -48,7 +48,6 @@ public class URLRewriteFilter implements Filter {
             dispatcher.forward(request, response);
         }
         else {
-            // Continue with the filter chain if no match
             chain.doFilter(request, response);
         }
     }

@@ -112,7 +112,6 @@
                                  }
                              }
                          %>
-                         <!-- Logout Form or Login Link -->
                          <%
                              if (session != null && session.getAttribute("username") != null) {
                          %>

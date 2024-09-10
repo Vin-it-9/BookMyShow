@@ -22,7 +22,6 @@
         Class.forName("com.mysql.cj.jdbc.Driver");
         conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/book", "root", "root");
 
-        // Query to get show, theater, and seat price information
         String showQuery = "SELECT t.theater_id, t.name AS theater_name, ms.show_time, ms.ticket_price " +
                            "FROM movie_shows ms " +
                            "JOIN theaters t ON ms.theater_id = t.theater_id " +
@@ -139,7 +138,6 @@
         </div>
     </div>
 
-       <!-- below is this for seats sections  -->
 <div class = "flex items-center justify-center w-full ">
     <div class="flex  items-center justify-center  mb-10">
         <div class="container w-full bg-white shadow-lg rounded-lg p-8 mt-4">
@@ -191,11 +189,6 @@
          <div class="flex justify-center  ">
                    <p>All eyes this way please!</P>
           </div>
-
-
-
-
-
                 <div class="text-xl font-semibold text-gray-800 mb-2 mt-4" id="totalAmount">Pay: 0.00 Rs</div>
                 <button type="submit" class="bg-green-600 mt-5 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-700 transition duration-300">
                     Confirm Booking

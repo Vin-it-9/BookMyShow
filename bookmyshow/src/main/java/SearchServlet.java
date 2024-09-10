@@ -21,6 +21,7 @@ public class SearchServlet extends HttpServlet {
     private static final String DB_PASSWORD = "root";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String searchTerm = request.getParameter("term");
 
         response.setContentType("application/json");
