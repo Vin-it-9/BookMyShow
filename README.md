@@ -4,6 +4,25 @@
 
 BookMyShow is developing an admin panel that empowers administrators to perform comprehensive CRUD operations for managing the ticket booking system. Admins can add, edit, and delete movies, as well as manage shows and seats. The panel provides an overview of all users, shows, and movies. Users can easily select movies, view detailed descriptions and posters, and book shows seamlessly. Additionally, users can search for movies by name and access their previous booking history, enhancing the overall ticket purchasing experience. After registration, users receive a confirmation email, and upon booking confirmation, they receive an email with the details of their selected movies, ensuring clear communication throughout the process.
 
+Sure! Here’s a sample section for your README file that outlines the tech stack you used:
+
+
+## Tech Stack
+
+This project is built using the following technologies:
+
+- **Backend:**
+  - Java
+  - Java Servlets
+  - JavaServer Pages (JSP)
+  - MySQL Database
+
+- **Frontend:**
+  - Tailwind CSS
+  - JavaScript
+  - AJAX
+
+
 ## Prerequisites
 
 Before getting started, ensure you have the following installed on your machine:
@@ -158,9 +177,3 @@ CREATE TABLE bookings (
     FOREIGN KEY (show_id) REFERENCES movie_shows(show_id) ON DELETE CASCADE
 );
 ```
-
-
-
-
-
-    
