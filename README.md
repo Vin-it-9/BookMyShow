@@ -173,7 +173,6 @@ CREATE TABLE bookings (
     total_amount DECIMAL(10,2) NOT NULL,
     selected_seats TEXT NOT NULL,
     verification_key VARCHAR(255) NOT NULL,
-    PRIMARY KEY (booking_id),
-    FOREIGN KEY (show_id) REFERENCES movie_shows(show_id) ON DELETE CASCADE
+    PRIMARY KEY (booking_id)
 );
 ```
